@@ -18,18 +18,18 @@ This approach allows the network to:
 
 For a European-style call option with price $V(S, t)$, spot price $S$, time $t$, constant risk-free rate $r$, and volatility $\sigma$, the Black–Scholes equation is:
 
-$$
+```math
 \frac{\partial V}{\partial t}
 + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 V}{\partial S^2}
 + r S \frac{\partial V}{\partial S}
 - r V = 0
-$$
+```
 
 subject to the **terminal condition** at maturity $T$:
 
-$$
+```math
 V(S, T) = \max(S - K, 0)
-$$
+```
 
 for strike price $K$.
 
@@ -41,22 +41,22 @@ The PINN learns a function $\hat{V}_\theta(S, t, \sigma, K, r)$ whose derivative
 
 The total training loss combines three key components:
 
-$$
+```math
 \mathcal{L} = 
 \lambda_{\text{PDE}} \cdot \mathcal{L}_{\text{PDE}}
 + \lambda_{\text{terminal}} \cdot \mathcal{L}_{\text{terminal}}
 + \lambda_{\text{data}} \cdot \mathcal{L}_{\text{data}}
-$$
+```
 
 where:
 
 - **PDE residual loss** enforces the Black–Scholes differential constraint:
 
-  $$
+  ```math
   \mathcal{L}_{\text{PDE}} = \mathbb{E}\left[\left(
   V_t + \tfrac{1}{2}\sigma^2 S^2 V_{SS} + r S V_S - r V
   \right)^2\right]
-  $$
+  ```
 
 - **Terminal loss** enforces the payoff condition $V(S, T) = \max(S-K, 0)$  
 - **Data loss** (optional) fits observed market or synthetic prices
@@ -69,13 +69,13 @@ Training is performed using stochastic gradient descent (e.g., Adam), with all s
 
 For **American-style options**, early exercise introduces a *free boundary condition*:
 
-$$
+```math
 V(S, t) \geq \max(S - K, 0)
-$$
+```
 
 and the PDE becomes an **inequality-constrained** problem (a *complementarity formulation*):
 
-$$
+```math
 \min\left(
 \frac{\partial V}{\partial t}
 + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 V}{\partial S^2}
@@ -83,7 +83,7 @@ $$
 - r V,\;
 V - (S - K)
 \right) = 0
-$$
+```
 
 In the PINN framework, this condition is typically handled by:
 - Adding a **penalty term** that enforces $V \geq \text{payoff}$,
